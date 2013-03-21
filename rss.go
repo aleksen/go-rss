@@ -31,6 +31,7 @@ type Item struct {
 	Link        string        `xml:"link"`
 	Comments    string        `xml:"comments"`
 	PubDate     Date          `xml:"pubDate"`
+	DcDate      Date          `xml:"date"`
 	GUID        string        `xml:"guid"`
 	Category    []string      `xml:"category"`
 	Enclosure   ItemEnclosure `xml:"enclosure"`
@@ -45,6 +46,9 @@ func (self Date) Parse() (time.Time, error) {
 	t, err := time.Parse("Mon, 02 Jan 2006 15:04:05 -0700", string(self)) 
 	if err != nil {
 		t, err = time.Parse(time.RFC822, string(self)) // RSS 2.0 spec
+		if err != nil {
+			t, err = time.Parse("2006-01-02T15:04-07:00", string(self)) // RSS 2.0 spec
+		}
 	}
 	return t, err
 }
